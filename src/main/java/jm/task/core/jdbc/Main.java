@@ -3,10 +3,7 @@ package jm.task.core.jdbc;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -20,17 +17,33 @@ public class Main {
     private static final byte[] ages = {32, 19, 98, 60};
 
     private static final String INSERT_NEW = "INSERT INTO users(name, last_name, age) VALUES (?, ?, ?)";
+    private static final String GET_ALL = "SELECT * FROM users";
 
     public static void main(String[] args) {
 
         ArrayList<User> users = createUsersList(names, lastNames, ages);
 
-        try (Connection connection = Util.getConnection(URL, USERNAME, PASSWORD); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_NEW)) {
-            addUsersToTable(users, preparedStatement);
+        try (Connection connection = Util.getConnection(URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatementInsert = connection.prepareStatement(INSERT_NEW);
+             PreparedStatement preparedStatementGetAll = connection.prepareStatement(GET_ALL)) {
+            addUsersToTable(users, preparedStatementInsert);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static void getAndPrintAllUsers(PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            long id = resultSet.getLong("id");
+            String name = resultSet.getString("name");
+            String lastName = resultSet.getString("last_name");
+            byte age = resultSet.getByte("age");
+
+            User user = new User(name, lastName, age);
+            user.setId(id);
+        }
     }
 
     public static void addUsersToTable(ArrayList<User> users, PreparedStatement preparedStatement) {
@@ -38,7 +51,7 @@ public class Main {
             try {
                 preparedStatement.setString(1, x.getName());
                 preparedStatement.setString(2, x.getLastName());
-                preparedStatement.setInt(3, x.getAge());
+                preparedStatement.setByte(3, x.getAge());
 
                 preparedStatement.execute();
 
