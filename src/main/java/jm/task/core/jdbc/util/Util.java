@@ -7,10 +7,12 @@ import java.sql.SQLException;
 
 public class Util {
 
-    public static Connection getConnection(String url, String username, String password) throws SQLException {
-        Connection connection;
-        getDriver();
-        connection = DriverManager.getConnection(url, username, password);
+    public static Connection getConnection(String url, String username, String password) {
+        Connection connection = null;
+        try {
+            getDriver();
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException ignored) {}
         return connection;
     }
 
