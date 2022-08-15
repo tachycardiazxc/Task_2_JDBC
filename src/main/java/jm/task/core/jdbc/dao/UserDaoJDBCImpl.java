@@ -18,14 +18,6 @@ public class UserDaoJDBCImpl implements UserDao {
 
     }
 
-//    create table task_2_db.user
-//            (
-//    id   INTEGER auto_increment,
-//    user VARCHAR(32) not null,
-//    constraint `PRIMARY`
-//    primary key (id)
-//    );
-
     public void createUsersTable() {
         try {
             String SQL_CREATE = "CREATE TABLE users " +

@@ -14,7 +14,7 @@ public class Main {
         UserServiceImpl userService = new UserServiceImpl();
         userService.createUsersTable();
 
-        ArrayList<User> users = createUsersList(names, lastNames, ages);
+        ArrayList<User> users = createUsersList();
 
         users.forEach(x -> {
             userService.saveUser(x.getName(), x.getLastName(), x.getAge());
@@ -25,7 +25,7 @@ public class Main {
         userService.dropUsersTable();
     }
 
-    public static ArrayList<User> createUsersList(String[] names, String[] lastNames, byte[] ages) {
+    public static ArrayList<User> createUsersList() {
         ArrayList<User> usersList = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
             usersList.add(new User(names[i], lastNames[i], ages[i]));
