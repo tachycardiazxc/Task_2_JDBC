@@ -18,7 +18,8 @@ public class Util {
         try {
             getDriver();
             connection = DriverManager.getConnection(url, username, password);
-        } catch (SQLException ignored) {}
+        } catch (SQLException ignored) {
+        }
         return connection;
     }
 
@@ -27,28 +28,23 @@ public class Util {
         DriverManager.registerDriver(driver);
     }
 
-    public static Session setUpHibernate() {
-        SessionFactory sessionFactory = null;
-        try {
-            Properties properties = new Properties();
+    public static SessionFactory setUpHibernate() throws HibernateException {
+        Properties properties = new Properties();
 
-            properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/task_2_db");
-            properties.setProperty("dialect", "org.hibernate.dialect.MySQL8Dialect");
-            properties.setProperty("hibernate.connection.username", "root");
-            properties.setProperty("hibernate.connection.password", "admin");
-            properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/task_2_db");
+        properties.setProperty("dialect", "org.hibernate.dialect.MySQL8Dialect");
+        properties.setProperty("hibernate.connection.username", "root");
+        properties.setProperty("hibernate.connection.password", "admin");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create");
 
-            sessionFactory = new org.hibernate.cfg.Configuration()
-                    .addProperties(properties)
-                    .addAnnotatedClass(User.class)
-                    .buildSessionFactory();
-            return getSession(sessionFactory);
-        } catch (HibernateException ignored) {}
-        return null;
+        return getSession(properties);
     }
 
-    private static Session getSession(SessionFactory sessionFactory) throws HibernateException {
-        return sessionFactory.openSession();
+    private static SessionFactory getSession(Properties properties) throws HibernateException {
+        return new org.hibernate.cfg.Configuration()
+                .addProperties(properties)
+                .addAnnotatedClass(User.class)
+                .buildSessionFactory();
     }
 
 }
