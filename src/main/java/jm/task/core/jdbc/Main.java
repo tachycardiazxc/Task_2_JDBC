@@ -18,6 +18,7 @@ public class Main {
 
     private static final String INSERT_NEW = "INSERT INTO users(name, last_name, age) VALUES (?, ?, ?)";
     private static final String GET_ALL = "SELECT * FROM users";
+    private static final String CLEAN_UP = "DELETE FROM users";
 
     public static void main(String[] args) {
 
@@ -25,8 +26,11 @@ public class Main {
 
         try (Connection connection = Util.getConnection(URL, USERNAME, PASSWORD);
              PreparedStatement preparedStatementInsert = connection.prepareStatement(INSERT_NEW);
-             PreparedStatement preparedStatementGetAll = connection.prepareStatement(GET_ALL)) {
+             PreparedStatement preparedStatementGetAll = connection.prepareStatement(GET_ALL);
+             PreparedStatement preparedStatementCleanUp = connection.prepareStatement(CLEAN_UP)) {
             addUsersToTable(users, preparedStatementInsert);
+            getAndPrintAllUsers(preparedStatementGetAll);
+            preparedStatementCleanUp.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -43,6 +47,7 @@ public class Main {
 
             User user = new User(name, lastName, age);
             user.setId(id);
+            System.out.println(user);
         }
     }
 
