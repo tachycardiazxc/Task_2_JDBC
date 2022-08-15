@@ -2,7 +2,6 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +18,36 @@ public class UserDaoJDBCImpl implements UserDao {
 
     }
 
+//    create table task_2_db.user
+//            (
+//    id   INTEGER auto_increment,
+//    user VARCHAR(32) not null,
+//    constraint `PRIMARY`
+//    primary key (id)
+//    );
+
     public void createUsersTable() {
         try {
             String SQL_CREATE = "CREATE TABLE users " +
-                    "(id INTEGER not null, " +
+                    "(id INTEGER auto_increment, " +
                     "name VARCHAR(32) not null, " +
                     "last_name VARCHAR(32) not null, " +
                     "age INTEGER(3), " +
+                    "constraint `PRIMARY` " +
                     "PRIMARY KEY (id))";
             connection.createStatement().executeUpdate(SQL_CREATE);
-        } catch (SQLException ignored) {}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void dropUsersTable() {
         try {
             String SQL_DROP = "DROP TABLE users";
             connection.createStatement().executeUpdate(SQL_DROP);
-        } catch (SQLException ignored) {}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveUser(String name, String lastName, byte age) {
@@ -48,8 +60,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
             preparedStatement.execute();
 
-            System.out.printf("User с именем - %s добавлен в базу данных", name);
-        } catch (SQLException ignored) {}
+            System.out.printf("User with name - %s was added to db\n", name);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeUserById(long id) {
