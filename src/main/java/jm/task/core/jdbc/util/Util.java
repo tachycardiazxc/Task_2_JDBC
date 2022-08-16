@@ -7,15 +7,11 @@ import java.sql.SQLException;
 
 public class Util {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/task_2_db";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "admin";
-
-    public static Connection getConnection() {
+    public static Connection getConnection(String url, String username, String password) {
         Connection connection = null;
         try {
             getDriver();
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException ignored) {}
         return connection;
     }
