@@ -8,11 +8,7 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    private final String URL = "jdbc:mysql://localhost:3306/task_2_db";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "admin";
-
-    private final Connection connection = Util.getConnection(URL, USERNAME, PASSWORD);
+    private final Connection connection = Util.getConnection();
 
     public UserDaoJDBCImpl() {
 
@@ -71,8 +67,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         String SQL_GET_ALL_USERS = "SELECT * FROM users";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_USERS);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = connection.createStatement().executeQuery(SQL_GET_ALL_USERS);
 
             List<User> userList = new ArrayList<>();
             while (resultSet.next()) {
@@ -95,7 +90,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         String SQL_CLEAN_TABLE = "DELETE FROM users";
         try {
-            connection.prepareStatement(SQL_CLEAN_TABLE).execute();
+            connection.createStatement().executeUpdate(SQL_CLEAN_TABLE);
         } catch (SQLException ignored) {}
     }
 }
