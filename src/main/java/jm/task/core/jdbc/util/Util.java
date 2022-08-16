@@ -5,7 +5,6 @@ import jm.task.core.jdbc.model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Environment;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
