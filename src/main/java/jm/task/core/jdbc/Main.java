@@ -3,6 +3,7 @@ package jm.task.core.jdbc;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserServiceImpl;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -18,9 +19,13 @@ public class Main {
 
         users.forEach(x -> {
             userService.saveUser(x.getName(), x.getLastName(), x.getAge());
+            System.out.printf("User with name - %s was added to db\n", x.getName());
         });
 
-        userService.getAllUsers();
+        List<User> usersList = userService.getAllUsers();
+
+        usersList.forEach(System.out::println);
+
         userService.cleanUsersTable();
         userService.dropUsersTable();
     }

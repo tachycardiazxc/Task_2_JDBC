@@ -3,8 +3,8 @@ package jm.task.core.jdbc.util;
 import com.mysql.cj.jdbc.Driver;
 import jm.task.core.jdbc.model.User;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Environment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,11 +31,11 @@ public class Util {
     public static SessionFactory setUpHibernate() throws HibernateException {
         Properties properties = new Properties();
 
-        properties.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/task_2_db");
-        properties.setProperty("dialect", "org.hibernate.dialect.MySQL8Dialect");
-        properties.setProperty("hibernate.connection.username", "root");
-        properties.setProperty("hibernate.connection.password", "admin");
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty(Environment.URL, "jdbc:mysql://localhost:3306/task_2_db");
+        properties.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
+        properties.setProperty(Environment.USER, "root");
+        properties.setProperty(Environment.PASS, "admin");
+        properties.setProperty(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
 
         return getSession(properties);
     }
