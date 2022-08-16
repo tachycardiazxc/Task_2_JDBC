@@ -13,11 +13,15 @@ import java.util.Properties;
 
 public class Util {
 
-    public static Connection getConnection(String url, String username, String password) {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/task_2_db";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "admin";
+
+    public static Connection getConnection() {
         Connection connection = null;
         try {
             getDriver();
-            connection = DriverManager.getConnection(url, username, password);
+            connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
         } catch (SQLException ignored) {
         }
         return connection;
