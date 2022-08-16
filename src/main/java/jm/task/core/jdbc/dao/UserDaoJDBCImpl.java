@@ -8,11 +8,7 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    private final String URL = "jdbc:mysql://localhost:3306/task_2_db";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "admin";
-
-    private final Connection connection = Util.getConnection(URL, USERNAME, PASSWORD);
+    private final Connection connection = Util.getConnection();
 
     public UserDaoJDBCImpl() {
 
