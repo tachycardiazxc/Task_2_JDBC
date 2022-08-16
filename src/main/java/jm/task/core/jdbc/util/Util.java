@@ -40,6 +40,7 @@ public class Util {
         properties.setProperty(Environment.USER, "root");
         properties.setProperty(Environment.PASS, "admin");
         properties.setProperty(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+//        properties.setProperty(Environment.SHOW_SQL, "true");
 
         return getSession(properties);
     }

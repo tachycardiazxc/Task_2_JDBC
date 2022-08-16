@@ -23,7 +23,6 @@ public class Main {
         });
 
         List<User> usersList = userService.getAllUsers();
-
         usersList.forEach(System.out::println);
 
         userService.cleanUsersTable();

@@ -2,10 +2,15 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.HibernateError;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.SQLGrammarException;
+
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -17,7 +22,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        String SQL_CREATE = "CREATE TABLE users " +
+        String SQL_CREATE = "CREATE TABLE user " +
                 "(id INTEGER auto_increment, " +
                 "name VARCHAR(32) not null, " +
                 "last_name VARCHAR(32) not null, " +
@@ -25,45 +30,40 @@ public class UserDaoHibernateImpl implements UserDao {
                 "constraint `PRIMARY` " +
                 "PRIMARY KEY (id))";
         try (Session session = sessionFactory.openSession()) {
-            session.createSQLQuery(SQL_CREATE);
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+            session.beginTransaction();
+            session.createSQLQuery(SQL_CREATE).executeUpdate();
+        } catch (HibernateException ignored) {}
     }
 
     @Override
     public void dropUsersTable() {
-        String SQL_DROP = "DROP TABLE users";
+        String SQL_DROP = "DROP TABLE user";
         try (Session session = sessionFactory.openSession()) {
-            session.createSQLQuery(SQL_DROP);
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+            session.beginTransaction();
+            session.createSQLQuery(SQL_DROP).executeUpdate();
+        } catch (PersistenceException ignored) {}
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try (Session session = sessionFactory.openSession()) {
-            User user = new User(name, lastName, age);
+            session.beginTransaction();
 
+            User user = new User(name, lastName, age);
             session.save(user);
             session.getTransaction().commit();
 
-            System.out.printf("User with name - %s was added to db\n", name);
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+        } catch (PersistenceException ignored) {}
     }
 
     @Override
     public void removeUserById(long id) {
         try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
             User user = session.load(User.class, id);
             session.delete(user);
             session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+        } catch (PersistenceException ignored) {}
     }
 
     @Override
@@ -72,19 +72,17 @@ public class UserDaoHibernateImpl implements UserDao {
             CriteriaQuery<User> criteria = session.getCriteriaBuilder().createQuery(User.class);
             criteria.from(User.class);
             return session.createQuery(criteria).getResultList();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+        } catch (PersistenceException ignored) {}
         return null;
     }
 
     @Override
     public void cleanUsersTable() {
         try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
             List<User> users = getAllUsers();
             users.forEach(session::delete);
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
+            session.getTransaction().commit();
+        } catch (PersistenceException ignored) {}
     }
 }
